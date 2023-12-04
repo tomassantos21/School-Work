@@ -1,0 +1,342 @@
+int tamMax=100;
+
+		String [] nome = new String[tamMax];
+		double [] quanto = new double[tamMax];
+		double [] preco = new double[tamMax];
+		boolean [] feito = new boolean[tamMax];
+
+		int nItens=0;
+
+		Scanner input = new Scanner(System.in);
+
+		char opPrincipal = 0;
+		char opEditar = 0;
+		char opFazerCompras = 0;
+		char opListar = 0;
+
+		System.out.println("MyShoppingList 1.0\n");
+
+		do{
+			System.out.println("(E)ditar Lista.\n"
+								+ "(F)azer compras.\n"
+								+ " Fazer (c)ontas.\n"
+								+ "(S)air.\n"
+								+ "\nIntroduza um caracter para interagir com o menu:");
+			
+			opPrincipal = input.next().charAt(0);
+			input.nextLine();
+
+			switch(opPrincipal){
+
+			case 'E': case 'e':
+
+				do{
+					System.out.println();
+					
+					System.out.println("(I)nserir item no fim da lista.\n"
+									+ "Inserir item na (p)osição n da lista.\n"
+									+ "Apagar (ú)ltimo item inserido na lista.\n"
+									+ "Apagar item na posição (n) da lista.\n"
+									+ "(A)pagar itens da posição m à n da lista.\n"
+									+ "(L)istar todos os itens.\n"
+									+ "(V)oltar.\n"
+									+ "\nIntroduza um caracter para interagir com o menu:");
+					
+					opEditar = input.next().charAt(0); 
+					input.nextLine();// Consumir a quebra de linha pendente depois do input do utilizador
+
+					switch(opEditar){
+					case 'I': case 'i':
+
+						System.out.print("\nIndique o item que quer adicionar: ");
+						nome[nItens] = input.next();
+						input.nextLine();
+						
+						System.out.print("\nIndique a quantidade do Item:");
+						quanto[nItens] = input.nextDouble();
+						input.nextLine();
+						
+						System.out.print("\nIndique o preço do Item:");
+						preco[nItens]= input.nextDouble();
+						input.nextLine();
+						nItens++;
+						
+						System.out.println("\nItem adicionado com sucesso!");
+						System.out.println();
+						
+						break;
+
+					case 'p': case 'P': 
+
+						System.out.println("\nEscolha uma posição para adicionar um item:");
+						
+						int posicaoNovoItem = input.nextInt();
+						input.nextLine(); 
+
+						if (posicaoNovoItem  >= 1 && posicaoNovoItem  <= tamMax + 1) {
+							//Verificar se a posição introduzida se encontra dentro do array "nome"
+
+							System.out.println("\nIndique o item que quer adicionar: ");
+							String novoItem = input.next();
+							
+							System.out.print("\nIndique a quantidade do Item:");
+							quanto[nItens] = input.nextDouble();
+							input.nextLine();
+							
+							System.out.print("\nIndique o preço do Item:");
+							preco[nItens]= input.nextDouble();
+							input.nextLine();
+							
+
+							// Verificar se o Array "nome" tem espaço para o item
+							if (nItens<tamMax) {
+
+								//desloca os itens para abrir espaço no array, avançando-os 1 posição 
+								if(posicaoNovoItem <=nItens) {
+									for (int i = nItens - 1; i>= posicaoNovoItem; i--) { //
+										
+										nome[i+1] = nome[i];
+										
+										quanto[i+1] = quanto[i];
+										
+										preco[i+1]= preco[i];
+										
+									}
+								
+									//adiciona as novas informações sobre o item (o respetivo nome, quantidade e valor)
+									nome[posicaoNovoItem -1]=novoItem;
+									quanto[posicaoNovoItem -1] = quanto[nItens];
+									preco[posicaoNovoItem -1]= preco[nItens];
+									nItens++;
+									System.out.println("\nItem adicionado com sucesso!");
+								
+								} else {
+									// A posição está ocupada, mensagem de erro.
+									System.out.println("\nA posição escolhida já está ocupada. Escolha outra posição.");
+									System.out.println();
+								}
+							} else {
+								System.out.println("\nPosição inválida! Tente novamente.");
+								System.out.println();
+							}
+						}
+						break;
+
+					case 'U': case 'u': case 'ú': case 'Ú':
+
+						if(nItens > 0) {
+							System.out.println("\nÚltimo item "+ nome[nItens-1] + " removido");
+							nome[nItens-1] = null;
+							preco[nItens - 1] = 0;
+							quanto[nItens - 1] = 0;
+							feito[nItens - 1] = false;
+							nItens--;
+						}else {
+							System.out.println("\nA lista está vazia. Não tem items para remover!");
+						}
+						System.out.println();
+						break;
+
+					case 'N': case 'n':
+
+						System.out.println("\nEscolha uma posição para apagar um item:");
+						int posicaoApagar = input.nextInt();
+						input.nextLine();
+
+						if (posicaoApagar >= 1 && posicaoApagar <= nItens) {
+							// move os elementos a partir da posição escolhida para trás, removendo o item
+							for (int i = posicaoApagar - 1; i < nItens - 1; i++) {
+								nome[i] = nome[i + 1];
+							}
+							// deixa a última posição a "null", pois o último elemento foi movido para a posição anterior
+							nItens--;
+							nome[nItens - 1] = null;
+							preco[nItens - 1] = 0;
+							quanto[nItens - 1] = 0;
+							feito[nItens - 1] = false;
+
+							System.out.println("Item removido com sucesso!");
+						} else {
+							System.out.println("Posição inválida! Tente novamente.\n");
+						}
+						System.out.println();
+						break;
+
+					case 'A': case 'a':
+						
+						//Escolha das posições do intervalo 
+
+						System.out.println("Introduza a posição inicial (m): ");
+						int posicaoInicial = input.nextInt();
+						input.nextLine();
+
+						System.out.println("Introduza a posição final (n): ");
+						int posicaoFinal = input.nextInt();
+						input.nextLine(); 
+
+						//confirma que as posições são válidas 
+						if (posicaoInicial >= 1 && posicaoFinal <= nItens && posicaoInicial <= posicaoFinal) {
+							
+							// Apaga os itens nas posições especificadas
+							for (int i = posicaoInicial - 1; i < posicaoFinal; i++) {
+								
+								nome[i] = null;
+								
+								preco[i] = 0;
+								
+								quanto[i] = 0;
+								
+								feito[i] = false;
+
+								nItens--;
+							}
+
+							System.out.println("Itens removidos com sucesso!");
+						} else {
+							System.out.println("Posições inválidas! Tente novamente.");
+						}
+						System.out.println();
+						break;
+
+					case 'L': case 'l':
+
+						System.out.println("\nLista de Itens:\n");
+						System.out.println("\t\tItem\t\tQuantidade\t\tPreço\t\tComprado");
+
+						for (int i = 0; i < tamMax; i++) { //Listar itens 
+							if (nome[i] != null && nome[i].length() > 0) {
+								System.out.printf((i+1) + ":\t\t%s\t\t%2.3f \t\t\t%.2f\n", nome[i],quanto[i], preco[i]);
+							}
+
+						}
+						System.out.println();
+						break;
+
+					case 'V': case 'v':
+
+						break;
+						
+					default:
+						System.out.print("Caracter introduzido inválido. Por favor tente novamente.\n\n");
+					}
+				}while(opEditar != 'V' && opEditar !='v');
+				break;
+
+			case 'F':case 'f':
+
+				do{
+					System.out.println("(M)arcar primeiro item por comprar.\n"
+							+ "(D)esmarcar primeiro item comprado.\n"
+							+ "Trocar estado por (n)ome.\n"
+							+ "Trocar estado por (p)osição.\n"
+							+ "(L)istar.\n"
+							+ "(V)oltar.\n"
+							+ "Introduza um caracter para interagir com o menu:");
+					System.out.println();
+					opFazerCompras=input.next().charAt(0);
+					input.nextLine();
+					switch(opFazerCompras){
+					
+					case 'M': case 'm':
+
+						break;
+
+					case 'D': case 'd':
+
+						break;
+
+					case 'N': case 'n':
+
+						break;
+
+					case 'P': case 'p':
+
+						break;
+
+					case 'L': case 'l':
+						
+						
+						System.out.println("Listar (t)odos os itens.\n"
+								+ "(D)esmarcar primeiro item comprado.\n"
+								+ "Listar itens (c)omprados.\n"
+								+ "Listar itens (p)or comprar.\n"
+								+ "Introduza um caracter para interagir com o menu:");
+						System.out.println();
+						opListar = input.next().charAt(0);
+						input.nextLine();
+
+						switch(opListar){
+						case 'T': case 't':
+
+							break;
+
+						case 'C': case 'c':
+
+							break;
+
+						case 'P': case 'p':
+
+							break;
+						}
+						break;
+
+					case 'V': case 'v':
+
+						break;
+					}
+				}while(opFazerCompras!='V' && opFazerCompras != 'v'); //ATENCAO
+				
+				break;
+				
+			case 'C': case'c':
+				
+				char opContas = 0;
+				
+				System.out.println("Quanto custa a (l)ista?\n"
+						+ "Quanto já (g)astei?\n"
+						+ "Quanto custa o que (f)alta comprar?\n"
+						+ "Qual o preço (m)édio por item?\n"
+						+ "\n"
+						+ "Introduza um caracter para interagir com o menu:");
+				
+				System.out.println();
+				opContas = input.next().charAt(0);
+				input.nextLine();
+
+				switch(opContas){
+				
+				case 'L': case 'l':
+
+					break;
+
+				case 'G': case 'g':
+
+					break;
+
+				case 'F': case 'f':
+
+					break;
+
+				case 'M': case 'm':
+
+					break;
+				}
+				
+				break;
+			
+			case 'S': case 's':
+			
+				System.out.print("Obrigado por nos visitar");
+			
+			default:
+			
+				//caso o utilizador escreva algo incorreto
+				System.out.print("Caracter introduzido inválido. Por favor tente novamente.\n\n");
+
+			}
+			
+		}while(opPrincipal!='S' && opPrincipal!='s' );
+		
+		input.close();
+		
+	}
